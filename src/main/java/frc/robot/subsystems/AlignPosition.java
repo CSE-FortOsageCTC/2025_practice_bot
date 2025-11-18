@@ -122,7 +122,7 @@ public enum AlignPosition {
         boolean isRed = DriverStation.Alliance.Red.equals(DriverStation.getAlliance().get());
         int tagStartRange = isRed ? Constants.redScoringTagStart : Constants.blueScoringTagStart;
         double closestDistance = 1000;
- //       Pose2d botPose = s_Swerve.getEstimatedPosition();
+        Pose2d botPose = new Pose2d(); //s_Swerve.getEstimatedPosition();
         Pose2d closestPose = botPose;
         for (int i = tagStartRange; i < tagStartRange + 6; i++) {
             Pose2d tagPose = fieldLayout.getTagPose(i).get().toPose2d();
@@ -139,7 +139,7 @@ public enum AlignPosition {
         boolean isRed = DriverStation.Alliance.Red.equals(DriverStation.getAlliance().get());
         int tagStartRange = isRed ? Constants.redHumanPTagStart : Constants.blueHumanPTagStart;
         double closestDistance = 1000;
-//        Pose2d botPose = s_Swerve.getEstimatedPosition();
+        Pose2d botPose = new Pose2d(); //s_Swerve.getEstimatedPosition();
         Pose2d closestPose = botPose;
         for (int i = tagStartRange; i < tagStartRange + 2; i++) {
             Pose2d tagPose = fieldLayout.getTagPose(i).get().toPose2d();
