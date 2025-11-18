@@ -9,8 +9,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.lib.math.Conversions;
-import frc.lib.util.SwerveModuleConstants;
+import frc.robot.lib.math.Conversions;
+import frc.robot.lib.util.SwerveModuleConstants;
 public class SwerveModule {
     public int moduleNumber;
     private Rotation2d angleOffset;
@@ -100,4 +100,4 @@ public class SwerveModule {
         return optimizedState;
     }
 }
-}
+

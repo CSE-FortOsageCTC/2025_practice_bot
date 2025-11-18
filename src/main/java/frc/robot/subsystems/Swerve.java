@@ -37,12 +37,12 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.AlignPosition;
+//import frc.robot.AlignPosition;
 import frc.robot.AutoRotateUtil;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.SwerveModule;
-public class SwerveSubsystem extends SubsystemBase {
+public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
@@ -53,7 +53,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public PIDController rotationPidController;
     public PIDController yTranslationPidController;
     public PIDController xTranslationPidController;
-    public LimeLightSubsystem f_Limelight;
+    //public LimeLightSubsystem f_Limelight;
     public AutoRotateUtil s_AutoRotateUtil;
     public Debouncer pieceSeenDebouncer;
     public Field2d field;
@@ -95,7 +95,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         gyro.reset();
         //gyro.setYaw(isRed? 180:0);
-        f_Limelight = LimeLightSubsystem.getRightInstance();
+        //f_Limelight = LimeLightSubsystem.getRightInstance();
         s_AutoRotateUtil = new AutoRotateUtil(0);
         field = new Field2d();
 
@@ -106,14 +106,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
         publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose3d.struct).publish();
         arrayPublisher = NetworkTableInstance.getDefault().getStructArrayTopic("MyPoseArray", Pose3d.struct).publish();
-
+/* 
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
                 new SwerveModule(1, Constants.Swerve.Mod1.constants),
                 new SwerveModule(2, Constants.Swerve.Mod2.constants),
                 new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
-
+*/
         // swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics,
         // getGyroYaw(), getModulePositions());
         swerveEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroRot2d(),
@@ -310,14 +310,14 @@ public class SwerveSubsystem extends SubsystemBase {
     // return limeLightSwerveEstimator.getEstimatedPosition();
     // }
 
-    public Pose2d getLimelightBotPose() {
+   /*  public Pose2d getLimelightBotPose() {
         if ((DriverStation.isDisabled() || !DriverStation.isAutonomous()) && f_Limelight.getArea() >= 0.18) {
             Pose2d visionPose = f_Limelight.getBotPose();
             updateWithVision(visionPose, f_Limelight.getLastBotPoseTimestamp());
         }
         return getEstimatedPosition();
     }
-
+*/
     public void setPose(Pose2d pose) {
         swerveEstimator.resetPosition(getGyroRot2d(), getModulePositions(), pose);
         // limeLightSwerveEstimator.resetPosition(getGyroYaw(), getModulePositions(),
@@ -398,21 +398,21 @@ public class SwerveSubsystem extends SubsystemBase {
             mSwerveMods[i].setDesiredState(setpointStates[i], false);
         }
     }
-
+/*
     public Translation2d translateToApril() {
         double speedX;
         double speedY;
         if (!translationXController.atSetpoint()) {
-            speedX = translationXController.calculate(swerveEstimator.getEstimatedPosition().getX(),
-                    AlignPosition.getAlignOffset().getX());
+           // speedX = translationXController.calculate(swerveEstimator.getEstimatedPosition().getX(),
+                    //AlignPosition.getAlignOffset().getX());
 
         } else {
             speedX = 0;
         }
 
         if (!translationYController.atSetpoint()) {
-            speedY = translationYController.calculate(swerveEstimator.getEstimatedPosition().getY(),
-                    AlignPosition.getAlignOffset().getY());
+          //  speedY = translationYController.calculate(swerveEstimator.getEstimatedPosition().getY(),
+                   // AlignPosition.getAlignOffset().getY());
         } else {
             speedY = 0;
         }
@@ -422,7 +422,7 @@ public class SwerveSubsystem extends SubsystemBase {
         return new Translation2d(speedX, speedY);
 
     }
-
+*/
     public double rotateToApril(double angle) {
 
         double output = (((angle - swerveEstimator.getEstimatedPosition().getRotation().getDegrees())) + 360) % 360;
@@ -442,7 +442,7 @@ public class SwerveSubsystem extends SubsystemBase {
     // return s_AutoRotateUtil.calculateRotationSpeed();
     // }
 
-    public double rotateToNote() {
+   /* public double rotateToNote() {
         boolean noteInView = f_Limelight.pieceDetected();
 
         noteInView = pieceSeenDebouncer.calculate(noteInView);
@@ -454,7 +454,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
         return 0;
     }
-
+ */
+/*
     public Translation2d noteTranslation() {
         double xValue = f_Limelight.getX(); // gets the limelight X Coordinate
         double areaValue = f_Limelight.getArea();
@@ -481,13 +482,14 @@ public class SwerveSubsystem extends SubsystemBase {
             return new Translation2d(0, 0);
         }
     }
-
+ */
+/*
     public void alignAprilTag(AlignPosition alignPos, boolean isScoring) {
 
         AlignPosition.setPosition(alignPos, isScoring);
 
     }
-
+ */
     public void resetAlignApril() {
         translationXController.reset();
         translationYController.reset();
@@ -564,7 +566,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         updatePoseEstimator();
 
-        AlignPosition currentAlignPosition = AlignPosition.getPosition();
+       // AlignPosition currentAlignPosition = AlignPosition.getPosition();
 
         // for(SwerveModule mod : mSwerveMods){
         // // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder",
@@ -581,14 +583,14 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putData("Field", field);
         SmartDashboard.putNumber("Odometry X", odometryX);
         SmartDashboard.putNumber("Odometry Y", odometryY);
-
+/*
         if (AlignPosition.getIsScoring()) {
             setLimelightOdometryMT2(Constants.limelightLeft);
             setLimelightOdometryMT2(Constants.limelightRight);
         } else {
             setLimelightOdometryMT1(Constants.limelightSky);
         }
-
+ */
     }
 
     public class DriveParams {
