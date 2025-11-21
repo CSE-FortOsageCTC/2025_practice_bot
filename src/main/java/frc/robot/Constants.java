@@ -7,12 +7,12 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.lib.util.COTSTalonFXSwerveConstants;
+import frc.robot.lib.util.SwerveModuleConstants;
 import edu.wpi.first.math.util.Units;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -30,7 +30,7 @@ public final class Constants {
 
         public static final COTSTalonFXSwerveConstants chosenModule = // TODO: This must be tuned to specific robot
                 // COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
-                COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
+                COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
 
         /* Drivetrain Constants */
         public static final double trackWidth = Units.inchesToMeters(21.5); // TODO: This must be tuned to specific
@@ -129,9 +129,49 @@ public final class Constants {
             // BEVELS TO THE RIGHT
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-47.373046875); // 134.47265625
                                                                                                 // //133.06640625
-            //public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
-            //        canCoderID, angleOffset);
+            public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
+                    canCoderID, angleOffset);
         }
+        
+        /* Front Right Module - Module 1 */
+        public static final class Mod1 {
+          public static final int driveMotorID = 3;
+          public static final int angleMotorID = 4;
+          public static final int canCoderID = 14;
+
+          // BEVELS TO THE RIGHT
+          public static final Rotation2d angleOffset = Rotation2d.fromDegrees(57.39257812500001); // -120.41015624999999
+                                                                                                  // // -122.6953125
+          public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
+                  canCoderID, angleOffset);
+      }
+
+      /* Back Left Module - Module 2 */
+      public static final class Mod2 {
+          public static final int driveMotorID = 5;
+          public static final int angleMotorID = 6;
+          public static final int canCoderID = 16;
+
+          // BEVELS TO THE RIGHT
+          public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-35.244140625); // 144.4921875 //
+                                                                                              // 144.31640625
+          public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
+                  canCoderID, angleOffset);
+      }
+
+      /* Back Right Module - Module 3 */
+      public static final class Mod3 {
+          public static final int driveMotorID = 7;
+          public static final int angleMotorID = 8;
+          public static final int canCoderID = 18;
+
+          // BEVELS TO THE RIGHT
+          public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-99.052734375); // 75.41015625 //
+                                                                                              // 80.947265625
+          public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
+                  canCoderID, angleOffset);
+      }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
