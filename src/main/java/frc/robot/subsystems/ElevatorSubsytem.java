@@ -24,8 +24,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     /*private static ArmPosition lastElevatorPosition = ArmPosition.Travel;*/
 
     private ElevatorSubsystem(){
-        elevatorMaster = new SparkMax(50, MotorType.kBrushless);
-        elevatorFollower = new SparkMax(51, MotorType.kBrushless);
+        TalonFX elevatorMaster = new TalonFX(50, MotorType.kBrushless);
+        TalonFX elevatorFollower = new TalonFX(51, MotorType.kBrushless);
 
         pidController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(200, 75));
         pidController.setTolerance(0.1);
@@ -62,10 +62,10 @@ public class ElevatorSubsystem extends SubsystemBase{
         return lastElevatorPosition;
     }
 
-    @Override
+    /*@Override
     public void periodic(){
         SmartDashboard.putNumber("Elevator Encoder", getElevatorEncoder());
         SmartDashboard.putNumber("SparkMax Speed fr", elevatorFollower.get());
         pidController.setPID(0.075, 0, 0);
-    }
+    }*/
 }
