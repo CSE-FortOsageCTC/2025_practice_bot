@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase{
-    private static SparkMax elevatorMaster;
-    private static SparkMax elevatorFollower;
+    private static TalonFX elevatorMaster;
+    private static TalonFX elevatorFollower;
 
     private static ProfiledPIDController pidController;
 
@@ -24,8 +24,10 @@ public class ElevatorSubsystem extends SubsystemBase{
     /*private static ArmPosition lastElevatorPosition = ArmPosition.Travel;*/
 
     private ElevatorSubsystem(){
-        TalonFX elevatorMaster = new TalonFX(50, MotorType.kBrushless);
-        TalonFX elevatorFollower = new TalonFX(51, MotorType.kBrushless);
+        elevatorMaster = new TalonFX(50, MotorType.kBrushless);
+        elevatorFollower = new TalonFX(51, MotorType.kBrushless);
+
+        elevatorFollower.setControl(new Follower(elevatormaster.getDeviceID(), true));
 
         pidController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(200, 75));
         pidController.setTolerance(0.1);
