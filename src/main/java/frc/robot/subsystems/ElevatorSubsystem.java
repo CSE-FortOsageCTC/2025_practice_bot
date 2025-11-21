@@ -1,10 +1,6 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
-
-import frc.robot.Constants.ArmPosition;
-
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+// import frc.robot.Constants.ArmPosition;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.Follower;
@@ -29,7 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         elevatorMaster = new TalonFX(50);
         elevatorFollower = new TalonFX(51);
 
-        elevatorFollower.setControl(new Follower(elevatorMaster.getDeviceID(), true));
+        elevatorFollower.setControl(new Follower(elevatorMaster.getDeviceID(), false));
 
         pidController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(200, 75));
         pidController.setTolerance(0.1);
@@ -51,20 +47,20 @@ public class ElevatorSubsystem extends SubsystemBase{
         /*lastElevatorPosition = ArmPosition.Manual;*/
     }
 
-    private double getElevatorEncoder().getPosition().getValueAsDouble(){
-        return elevatorFollower.getEncoder().getPosition();
+    private double getElevatorEncoder(){
+        return elevatorFollower.getPosition().getValueAsDouble();
     }
 
-    public static ElevatorSubsytem getInstance(){
+    public static ElevatorSubsystem getInstance(){
         if(elevatorSubsystem == null) {
-            elevatorSubsystem = new ElevatorSubsytem();
+            elevatorSubsystem = new ElevatorSubsystem();
         }
         return elevatorSubsystem;
     }
 
-    public ArmPosition getArmPosition() {
+    /*public ArmPosition getArmPosition() {
         return lastElevatorPosition;
-    }
+    }*/
 
     /*@Override
     public void periodic(){
