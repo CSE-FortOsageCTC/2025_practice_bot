@@ -47,7 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         /*lastElevatorPosition = ArmPosition.Manual;*/
     }
 
-    private double getElevatorEncoder(){
+    private double getElevatorEncoder().getPosition().getValueAsDouble(){
         return elevatorFollower.getEncoder().getPosition();
     }
 
