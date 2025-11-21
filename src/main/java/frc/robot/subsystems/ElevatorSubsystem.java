@@ -6,6 +6,8 @@ import frc.robot.Constants.ArmPosition;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.controls.Follower;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -24,10 +26,10 @@ public class ElevatorSubsystem extends SubsystemBase{
     /*private static ArmPosition lastElevatorPosition = ArmPosition.Travel;*/
 
     private ElevatorSubsystem(){
-        elevatorMaster = new TalonFX(50, MotorType.kBrushless);
-        elevatorFollower = new TalonFX(51, MotorType.kBrushless);
+        elevatorMaster = new TalonFX(50);
+        elevatorFollower = new TalonFX(51);
 
-        elevatorFollower.setControl(new Follower(elevatormaster.getDeviceID(), true));
+        elevatorFollower.setControl(new Follower(elevatorMaster.getDeviceID(), true));
 
         pidController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(200, 75));
         pidController.setTolerance(0.1);
@@ -53,9 +55,9 @@ public class ElevatorSubsystem extends SubsystemBase{
         return elevatorFollower.getEncoder().getPosition();
     }
 
-    public static ElevatorSubsystem getInstance(){
+    public static ElevatorSubsytem getInstance(){
         if(elevatorSubsystem == null) {
-            elevatorSubsystem = new ElevatorSubsystem();
+            elevatorSubsystem = new ElevatorSubsytem();
         }
         return elevatorSubsystem;
     }
