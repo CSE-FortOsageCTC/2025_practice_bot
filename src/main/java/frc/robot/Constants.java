@@ -24,6 +24,8 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final double feedForwardAngle = 30;
+
+  public static final double stickDeadband = 0.125;
   
   public static final class Swerve {
         public static final int pigeonID = 10;

@@ -34,8 +34,8 @@ public class ManipulatorSubsystem extends SubsystemBase{
     private ManipulatorSubsystem() {
 
         //We still need IDs
-        manipulatorIntake = new TalonFX(56);
-        manipulatorWrist = new TalonFX(55);
+        manipulatorIntake = new TalonFX(13);
+        manipulatorWrist = new TalonFX(9);
 
         pidController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(70, 70));
         pidController.setTolerance(0.1);
