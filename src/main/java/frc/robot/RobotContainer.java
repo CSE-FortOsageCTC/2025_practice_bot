@@ -5,11 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-//import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmDefault;
 import frc.robot.commands.DefaultTeleop;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Swerve;
 
 /**
@@ -23,6 +24,8 @@ public class RobotContainer {
   private Swerve swerve = Swerve.getInstance();
   private Joystick driver = new Joystick(0);
   private Joystick operator = new Joystick(1);
+  private final ElevatorSubsystem elevatorSubsystem = ElevatorSubsystem.getInstance();
+  private final ArmDefault armDefaultCommand = new ArmDefault(driver, operator);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController =
       //new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -46,6 +49,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
       swerve.setDefaultCommand(new DefaultTeleop(driver, operator));
+      elevatorSubsystem.setDefaultCommand(armDefaultCommand);
   }
 
   /**

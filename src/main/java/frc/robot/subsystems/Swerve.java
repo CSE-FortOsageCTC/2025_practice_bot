@@ -568,10 +568,10 @@ public class Swerve extends SubsystemBase {
 
        // AlignPosition currentAlignPosition = AlignPosition.getPosition();
 
-        // for(SwerveModule mod : mSwerveMods){
-        // // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder",
-        // mod.getCANcoder().getDegrees());
-        // }
+        for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder",
+            mod.getCANcoder().getDegrees());
+        }
         Pose2d estimatedPose = swerveEstimator.getEstimatedPosition();
         poseA = new Pose3d(estimatedPose);
         publisher.set(poseA);
