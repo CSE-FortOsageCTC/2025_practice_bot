@@ -77,7 +77,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         manualSetpoint = getExtensionEncoder();
 
-        pidController = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(10, 10));
+        pidController = new ProfiledPIDController(0.25, 0, 0, new TrapezoidProfile.Constraints(70, 70));
         pidController.setTolerance(0.1);
     }
 

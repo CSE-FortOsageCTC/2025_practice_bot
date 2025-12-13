@@ -25,7 +25,7 @@ public class ArmDefault extends Command {
         this.operator = operator;
         this.elevatorsubsystem = ElevatorSubsystem.getInstance();
         // this.pivotSubsystem = PivotSubsystem.getInstance();
-        //this.manipulatorSubsystem = ManipulatorSubsystem.getInstance();
+        this.manipulatorSubsystem = ManipulatorSubsystem.getInstance();
 
         addRequirements(elevatorsubsystem);//, manipulatorSubsystem);
     }
@@ -39,16 +39,26 @@ public class ArmDefault extends Command {
             elevatorsubsystem.setSetpoint(elevatorsubsystem.getManualSetpoint() + 0.1);
         }
 
-        // if (operator.getRawAxis(XboxController.Axis.kRightX.value) > Constants.stickDeadband) {
-        //     manipulatorSubsystem.setSetpoint(manipulatorSubsystem.getManualSetpoint() - .1);
-        // } else if (operator.getRawAxis(XboxController.Axis.kRightX.value) < -Constants.stickDeadband) {
-        //     manipulatorSubsystem.setSetpoint(manipulatorSubsystem.getManualSetpoint() + .1);
-        // }
+        if (driver.getRawButton(XboxController.Button.kRightBumper.value)) {
+            manipulatorSubsystem.setIntakeSpeed(0.2);
+        }
+        else if (driver.getRawButton(XboxController.Button.kLeftBumper.value)) {
+            manipulatorSubsystem.setIntakeSpeed(-0.2);
+        }
+        else {
+            manipulatorSubsystem.setIntakeSpeed(0);
+        }
 
-        // if (operator.getRawButton(XboxController.Button.kBack.value)) {
-        //     System.out.println("(" + PivotSubsystem.getPivotEncoder() + ", " + elevatorsubsystem.getExtensionEncoder()
-        //             + ", " + manipulatorSubsystem.getWristEncoder() + ")");
-        // }
+        if (operator.getRawAxis(XboxController.Axis.kRightX.value) > Constants.stickDeadband) {
+            manipulatorSubsystem.setSetpoint(manipulatorSubsystem.getManualSetpoint() - .1);
+        } else if (operator.getRawAxis(XboxController.Axis.kRightX.value) < -Constants.stickDeadband) {
+            manipulatorSubsystem.setSetpoint(manipulatorSubsystem.getManualSetpoint() + .1);
+        }
+
+        if (operator.getRawButton(XboxController.Button.kBack.value)) {
+            System.out.println("(" + elevatorsubsystem.getExtensionEncoder()
+                    + ", " + manipulatorSubsystem.getWristEncoder() + ")");
+        }
 
         // if (operator.getRawAxis(XboxController.Axis.kLeftY.value) < -Constants.stickDeadband) {
         //     pivotSubsystem.setSetpoint(pivotSubsystem.getManualSetpoint() - 0.2);
@@ -66,7 +76,7 @@ public class ArmDefault extends Command {
 
         elevatorsubsystem.setPosition();
 
-        //manipulatorSubsystem.setPosition();
+        manipulatorSubsystem.setPosition();
 
         // if (!ArmPosition.Manual.equals(manipulatorSubsystem.getArmPosition())) {
         // manipulatorSubsystem.setPosition(ArmPosition.Travel);

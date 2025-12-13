@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 //These are a maybe, don't know if build is using the sensor or not.
 // import com.reduxrobotics.sensors.canandcolor.Canandcolor;
@@ -11,6 +14,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.ArmPosition;
 
 //don't have these values yet
 //import frc.robot.Constants.ArmPosition;
@@ -25,7 +30,11 @@ public class ManipulatorSubsystem extends SubsystemBase{
     private static ManipulatorSubsystem manipulatorSubsystem;
 
     //need values
-    //private static ArmPosition lastPosition;
+    private static ArmPosition lastPosition;
+
+    private double manualSetpoint;
+
+    private double setpoint;
 
     private static ProfiledPIDController pidController;
 
@@ -33,19 +42,22 @@ public class ManipulatorSubsystem extends SubsystemBase{
 
     private ManipulatorSubsystem() {
 
-        //We still need IDs
+        
         manipulatorIntake = new TalonFX(13);
         manipulatorWrist = new TalonFX(9);
 
-        pidController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(70, 70));
+        pidController = new ProfiledPIDController(.2, 0, 0, new TrapezoidProfile.Constraints(200, 200));
         pidController.setTolerance(0.1);
 
-        //canandcolor = new Canandcolor(30);
-        
-        //LEDs
-        //settings.setLampLEDBrightness(0.1);
-        
-        //canandcolor.setSettings(settings);
+        AudioConfigs audioConfigs = new AudioConfigs().withAllowMusicDurDisable(true);
+        manipulatorWrist.getConfigurator().apply(audioConfigs);
+
+        manipulatorWrist.setNeutralMode(NeutralModeValue.Brake);
+
+        manipulatorWrist.setPosition(0);
+
+        manualSetpoint = Constants.wristLowerLimit;
+        setpoint = Constants.wristLowerLimit;
     }
 
     public static ManipulatorSubsystem getInstance(){
@@ -67,53 +79,99 @@ public class ManipulatorSubsystem extends SubsystemBase{
         manipulatorIntake.set(speed);
     }
 
-    //Need values
-    // public void setPosition(ArmPosition position){
-    //     if (position != lastPosition) {
-    //         pidController.reset(getWristEncoder());
-    //     }
-        
-    //     double calculation = MathUtil.clamp(pidController.calculate(getWristEncoder(), position.telescope), -1, 1);
-    //     manipulatorWrist.set(calculation);
-    //     SmartDashboard.putNumber("PID Output", calculation);
-    //     lastPosition = position;
-    // }
+    public void addInstruments(Orchestra orchestra){
+        orchestra.addInstrument(manipulatorWrist);
 
-    private double getWristEncoder(){
-        //this value is initially a "StatusSignal<Angle>" so got it as a double
+    }
+
+    public void setSetpoint(double setpoint) {
+        ArmPosition.setPosition(ArmPosition.Manual);
+        lastPosition = ArmPosition.Manual;
+        manualSetpoint = MathUtil.clamp(setpoint, Constants.wristLowerLimit, Constants.wristUpperLimit);
+        //setPosition();
+    }
+
+    private void privSetSpeed(double speed) {
+
+        boolean isPositive = speed > 0;
+
+        if (atLimit(isPositive)) {
+            speed = 0;
+        }
+
+        manipulatorWrist.set(speed);
+    }
+
+    public void setPosition() {
+        if (ArmPosition.getPosition() != lastPosition) {
+            pidController.reset(getWristEncoder());
+        }
+
+        setpoint = ArmPosition.getPosition().manipulator;
+
+        if (setpoint == -1) {
+            setpoint = manualSetpoint;
+        } else {
+            manualSetpoint = getWristEncoder();
+        }
+
+        // boolean isDown = extensionSubsystem.getExtensionEncoder() - ArmPosition.getPosition().extension >= 0;
+
+        // if (!ExtensionSubsystem.nearSetpoint() && isDown) {
+        //     setpoint = ArmPosition.getPosition().manipulator;
+        // } else if (!ExtensionSubsystem.nearSetpoint() && !isDown && ArmPosition.getPosition().manipulator == -1) {
+        //     setpoint = manualSetpoint;
+        // }
+
+        // if (ExtensionSubsystem.atPosition() || (!ExtensionSubsystem.atPosition() && isDown)) {
+        //     double calculation = MathUtil.clamp(pidController.calculate(getWristEncoder(), setpoint), -1, 1);
+        //     privSetSpeed(calculation);
+        // } else {
+        //     privSetSpeed(0);
+        // }
+
+        double calculation = MathUtil.clamp(pidController.calculate(getWristEncoder(), setpoint), -.1, .1);
+        privSetSpeed(calculation);
+
+        SmartDashboard.putNumber("Wrist PID", calculation);
+        SmartDashboard.putNumber("Wrist Set Point", setpoint);
+        lastPosition = ArmPosition.getPosition();
+    }
+
+    private boolean atLimit(boolean positive) {
+        double encoder = getWristEncoder();
+        return (positive && encoder >= ( Constants.wristUpperLimit)
+            || (!positive && encoder <= Constants.wristLowerLimit));
+    }
+
+    public static boolean nearSetpoint() {
+        double encoder = manipulatorSubsystem.getWristEncoder();
+        return Math.abs(encoder - ArmPosition.getPosition().manipulator) <= 1;
+    }
+
+    public static boolean atPosition() {
+        return pidController.atSetpoint();
+    }
+
+    public double getWristEncoder() {
         return manipulatorWrist.getPosition().getValueAsDouble();
     }
 
-    // public ArmPosition getArmPosition() {
-    //     return lastPosition;
-    // }
+    public ArmPosition getArmPosition() {
+        return lastPosition;
+    }
 
+    public double getManualSetpoint() {
+        return manualSetpoint;
+    }
 
-    //EVERYTHING BELOW HERE IS CANANDCOLOR STUFF
+    @Override
+    public void periodic() {
+        // SmartDashboard.putNumber("Wrist Kraken Encoder", getWristEncoder());
+        SmartDashboard.putNumber("Wrist Absolute Encoder", getWristEncoder());
+        // SmartDashboard.putNumber("HSV CanAndColor", getHSVHue());
+        // pidController.setP(0.3);
 
-    // public double getProximity() {
-    //     return canandcolor.getProximity();
-    // }
-
-    // public Double getHSVHue() {
-    //     return canandcolor.getHSVHue();
-    // }
-
-    // public Double getHSVSaturation() {
-    //     return canandcolor.getHSVSaturation();
-    // }
-
-    // public Double getHSVValue() {
-    //     return canandcolor.getHSVValue();
-    // }
-
-    // @Override
-    // public void periodic(){
-    //     SmartDashboard.putNumber("CAC Proximity", getProximity());
-    //     SmartDashboard.putNumber("CAC Hue", getHSVHue());
-    //     SmartDashboard.putNumber("CAC Saturation", getHSVSaturation());
-    //     SmartDashboard.putNumber("CAC Value", getHSVValue());
-
-    //     pidController.setP(0.2);
-    // }
+        // SmartDashboard.putNumber("Proximity", getProximity());
+    }
 }

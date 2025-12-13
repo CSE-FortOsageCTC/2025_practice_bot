@@ -5,9 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmPosition;
 import frc.robot.commands.ArmDefault;
 import frc.robot.commands.DefaultTeleop;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -29,7 +34,39 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController =
       //new CommandXboxController(OperatorConstants.kDriverControllerPort);
+ private final JoystickButton driver_A_Function = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton driver_B_Function = new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton driver_X_Function = new JoystickButton(driver, XboxController.Button.kX.value);
+  private final JoystickButton driver_Y_Function = new JoystickButton(driver, XboxController.Button.kY.value);
+  private final JoystickButton driver_Start_ZeroHeading = new JoystickButton(driver,
+      XboxController.Button.kStart.value);
+  private final JoystickButton driver_Back_Function = new JoystickButton(driver, XboxController.Button.kBack.value);
+  private final JoystickButton driver_LeftBumper_Function = new JoystickButton(driver,
+      XboxController.Button.kLeftBumper.value);
+  private final JoystickButton driver_RightBumper_Function = new JoystickButton(driver,
+      XboxController.Button.kRightBumper.value);
+  private final POVButton driverLeftDpad = new POVButton(driver, 270);
+  private final POVButton driverRightDpad = new POVButton(driver, 90);
+  private final POVButton driverUpDpad = new POVButton(driver, 0);
+  private final POVButton driverDownDpad = new POVButton(driver, 180);
+  private final JoystickButton driverStartButton = new JoystickButton(driver, XboxController.Button.kStart.value);
 
+  private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
+  private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
+  private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
+  private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
+  private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
+  private final JoystickButton operatorLeftStickDown = new JoystickButton(operator,
+      XboxController.Button.kLeftStick.value);
+  private final JoystickButton operatorRightStickDown = new JoystickButton(operator,
+      XboxController.Button.kRightStick.value);
+
+  private final JoystickButton operatorLeftBumper = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton operatorRightBumper = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+  private final POVButton operatorUpDPad = new POVButton(operator, 0);
+  private final POVButton operatorRightDPad = new POVButton(operator, 90);
+  private final POVButton operatorDownDPad = new POVButton(operator, 180);
+  private final POVButton operatorLeftDPad = new POVButton(operator, 270);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -50,6 +87,15 @@ public class RobotContainer {
   private void configureBindings() {
       swerve.setDefaultCommand(new DefaultTeleop(driver, operator));
       elevatorSubsystem.setDefaultCommand(armDefaultCommand);
+      operatorLeftDPad.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.StartingConfig)));
+      operatorDownDPad.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.LowAlgae)));
+      // operatorA.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.Ground)));
+      operatorX.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.L3)));
+      operatorB.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.L2)));
+      operatorY.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.L4)));
+      // operatorRightDPad.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.L1)));
+      // operatorUpDPad.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.HighAlgae)));      operatorStart.onTrue(new InstantCommand(() -> ArmPosition.setPosition(ArmPosition.Net)));
+
   }
 
   /**

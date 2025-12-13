@@ -38,16 +38,19 @@ public final class Constants {
   public static final int redScoringTagStart = 6;
   public static final int blueHumanPTagStart = 12;
   public static final int redHumanPTagStart = 1;
-  public static final double extensionUpperLimit = 20;
-  public static final double extensionLowerLimit = 0;
+  public static final double extensionUpperLimit = 25;
+  public static final double extensionLowerLimit = 0.8;
+  //public static final double wristLowerLimit = 0;
+  public static final double wristUpperLimit = 21;
+  public static final double wristLowerLimit = 2.2; //needs to be tuned
   public enum ArmPosition {
     // Travel(-1, -.5, -1),
     // L1 (-29.418701171875, -0.8544921875, 21.56298828125),
-    // L2(-29.869384765625, -0.8447265625, 1.619140625),
-    // L3(-42.489501953125, -6.85302734375, 5.236328125),
-    // L4(-52.29443359375, -20.2578125, 13.787109375), // Original: (-51.948974609375, -21.0, 12.2900390625) different rn because the new pvc
+     L2(3.92, wristLowerLimit),
+     L3(10, wristLowerLimit),
+     L4(24.79541015625, 5.96826171875), // Original: (-51.948974609375, -21.0, 12.2900390625) different rn because the new pvc
     // HighAlgae(-41.728271484375, -5.177734375, 17.84521484375),
-    // LowAlgae(-33.37744140625, -0.037109375, 17.7041015625),
+    LowAlgae(12, 20.3),
     // Ground(0.134521484375, 0, 17.20068359375),
     // GroundP(-26.415283203125, -0.00146484375, 17.28955078125),
     // HumanP(-34.74365234375, 0.0029296875, 12.40283203125),
@@ -55,8 +58,8 @@ public final class Constants {
     // Climb2(-10.561767578125, -0.00244140625, 17.3291015625),
     // Net(-59.96142578125, -21.3369140625, 21.56298828125),
     // NetP(-59.97314453125, -2.77880859375, 21.56494140625),
-    // StartingConfig(-38.552490234375, 0.0068359375, 0.0),
-     Manual(-1, -1, -1);
+    StartingConfig(extensionLowerLimit, wristLowerLimit),
+     Manual(-1, -1);
 
     // public double pivot;
     public double extension;
@@ -64,7 +67,7 @@ public final class Constants {
 
     public static ArmPosition currentPosition = ArmPosition.Manual;
 
-    ArmPosition(double pivot, double extension, double manipulator) {
+    ArmPosition(double extension, double manipulator) {
         // this.pivot = pivot;
         this.extension = extension;
         this.manipulator = manipulator;
@@ -192,6 +195,10 @@ public final class Constants {
 
         public static final double minElevatorAngle = 29.2;
         public static final double maxElevatorAngle = 61.2;
+
+
+
+
 
         public static final double degreesToEncoderValue = maxElevatorValue / (maxElevatorAngle - minElevatorAngle);
                     // max Distance from robot - wrist angle shenanigans
